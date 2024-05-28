@@ -15,72 +15,51 @@ JSON object//
 <option value="table2">Table 2</option>
 </select>
 <br><br>
-<div id="tableContainer">
-<!-- Table will be generated here -->
-</div>
+<div id="tableContainer"></div>
 <script>
-// Define JSON object with table data
 const tables = {
-table1: {
-headers: ['Name', 'Age', 'City'],
-rows: [
-['John', 30, 'New York'],
-['Alice', 25, 'Los Angeles'],
-['Bob', 35, 'Chicago']
-]
-},
-table2: {
-headers: ['Product', 'Price'],
-rows: [
-['Laptop', 1000],
-['Smartphone', 700],
-['Tablet', 400]
-]
-}
+  table1: { headers: ['Name', 'Age', 'City'], rows: [['John', 30, 'New York'], ['Alice', 25, 'Los Angeles'], ['Bob', 35, 'Chicago']] },
+  table2: { headers: ['Product', 'Price'], rows: [['Laptop', 1000], ['Smartphone', 700], ['Tablet', 400]] }
 };
-// Function to generate HTML table based on selected value
+
 function generateTable(selectedValue) {
-const tableData = tables[selectedValue];
-
-if (!tableData) {
-console.error('Table data not found');
-return;
+  const tableData = tables[selectedValue];
+  if (!tableData) return console.error('Table data not found');
+  
+  const tableContainer = document.getElementById('tableContainer');
+  tableContainer.innerHTML = '';
+  
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const tbody = document.createElement('tbody');
+  
+  tableData.headers.forEach(headerText => {
+    const th = document.createElement('th');
+    th.textContent = headerText;
+    thead.appendChild(th);
+  });
+  
+  tableData.rows.forEach(rowData => {
+    const tr = document.createElement('tr');
+    rowData.forEach(cellData => {
+      const td = document.createElement('td');
+      td.textContent = cellData;
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  
+  table.appendChild(thead);
+  table.appendChild(tbody);
+  tableContainer.appendChild(table);
 }
-const tableContainer = document.getElementById('tableContainer');
-tableContainer.innerHTML = ''; // Clear previous table
-const table = document.createElement('table');
-const thead = document.createElement('thead');
-const tbody = document.createElement('tbody');
-// Add table headers
-const headerRow = document.createElement('tr');
-tableData.headers.forEach(headerText => {
-const th = document.createElement('th');
-th.textContent = headerText;
-headerRow.appendChild(th);
-});
-thead.appendChild(headerRow);
-// Add table rows
-tableData.rows.forEach(rowData => {
-const tr = document.createElement('tr');
-rowData.forEach(cellData => {
-const td = document.createElement('td');
-td.textContent = cellData;
-tr.appendChild(td);
-});
-tbody.appendChild(tr);
-});
-table.appendChild(thead);
-table.appendChild(tbody);
-tableContainer.appendChild(table);
-}
-// Event listener for dropdown change
-document.getElementById('tableSelector').addEventListener('change', function(event) {
-const selectedValue = event.target.value;
-generateTable(selectedValue);
-});
-// Initial table generation
 
-generateTable('table1'); // Initial value
+document.getElementById('tableSelector').addEventListener('change', event => {
+  generateTable(event.target.value);
+});
+
+generateTable('table1');
 </script>
 </body>
 </html>
+
